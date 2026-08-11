@@ -264,8 +264,8 @@ function injectStyles() {
       background-color: var(--mo-neutral100);
     }
 
-    html:not([data-mo-searching]) ol:has(a[href*="/content-manager/collection-types/api::"]) > li:has(a[href*="/api::"]):not(:has(.mo-group)):not([data-mo-direct]),
-    html:not([data-mo-searching]) ol:has(a[href*="/content-manager/single-types/api::"]) > li:has(a[href*="/api::"]):not(:has(.mo-group)):not([data-mo-direct]) {
+    html:not([data-mo-searching]) ol:not(main ol):has(a[href*="/content-manager/collection-types/api::"]) > li:has(a[href*="/api::"]):not(:has(.mo-group)):not([data-mo-direct]),
+    html:not([data-mo-searching]) ol:not(main ol):has(a[href*="/content-manager/single-types/api::"]) > li:has(a[href*="/api::"]):not(:has(.mo-group)):not([data-mo-direct]) {
       opacity: 0;
       height: 0;
       overflow: hidden;
@@ -310,8 +310,9 @@ function findContentTypeOls(): HTMLElement[] {
   const links = document.querySelectorAll(CONTENT_LINK_SELECTOR);
   const ols = new Set<HTMLElement>();
   links.forEach((a) => {
+    if ((a as HTMLElement).closest('main')) return;
     const ol = (a as HTMLElement).closest('ol');
-    if (ol) ols.add(ol as HTMLElement);
+    if (ol && !ol.closest('main')) ols.add(ol as HTMLElement);
   });
   return Array.from(ols);
 }
@@ -572,6 +573,7 @@ function scheduleSearchRegroup(delay = 160) {
 
 function isSidebarSearchInput(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLInputElement)) return false;
+  if (target.closest('main')) return false;
   let el: HTMLElement | null = target.parentElement;
   for (let i = 0; i < 8 && el; i++, el = el.parentElement) {
     if (el.querySelector?.(CONTENT_LINK_SELECTOR)) return true;
@@ -664,6 +666,7 @@ export function setupMenuOrganizer() {
 
       for (const node of mutation.addedNodes) {
         if (!(node instanceof Element)) continue;
+        if (node.closest('main')) continue;
 
         if (
           node.querySelector?.(CONTENT_LINK_SELECTOR) ||

@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [2.0.2] - 2026-08-11
+
+### Fixed
+- **List View Pagination:** Fixed the sidebar organizer breaking pagination in the Content Manager list view. Pagination page links share the same `/content-manager/collection-types/...` href shape as sidebar links, so the organizer was hiding the pagination items via CSS and ripping them out of the pagination `<ol>` to regroup them. All DOM organizing, CSS hiding, search handling, and mutation observing now exclude everything inside `<main>` — only the sidebar navigation is ever touched. (Reported by @getjahir)
+
 ## [2.0.1] - 2026-06-30
 
 ### Fixed
@@ -48,7 +53,8 @@ All notable changes to this project will be documented in this file.
 - DOM-based sidebar injection for zero-conflict integration
 - `strapi-plugin build` / `verify` compatible
 
-[Unreleased]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/chetanhasarmani1724/strapi-content-manager-organizer/compare/v1.0.0...v1.0.1
