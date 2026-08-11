@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [2.0.2] - 2026-08-11
 
 ### Fixed
-- **List View Pagination:** Fixed the sidebar organizer breaking pagination in the Content Manager list view. Pagination page links share the same `/content-manager/collection-types/...` href shape as sidebar links, so the organizer was hiding the pagination items via CSS and ripping them out of the pagination `<ol>` to regroup them. All DOM organizing, CSS hiding, search handling, and mutation observing now exclude everything inside `<main>` — only the sidebar navigation is ever touched. (Reported by @getjahir)
+- **List View Pagination:** Fixed the sidebar organizer breaking pagination in the Content Manager list view.
 
 ## [2.0.1] - 2026-06-30
 
