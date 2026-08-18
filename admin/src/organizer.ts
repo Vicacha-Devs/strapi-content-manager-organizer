@@ -226,7 +226,7 @@ function injectStyles() {
       min-width: 0;
       text-align: left;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       line-height: 1.2;
       color: var(--mo-neutral800);
     }
@@ -258,6 +258,11 @@ function injectStyles() {
  
     .mo-items > li > a > div {
       padding-left: 36px !important;
+    }
+
+    .mo-items li a div,
+    li[data-mo-direct] a div {
+      font-size: 1.4rem;
     }
 
     html[data-mo-theme="light"] .mo-header:hover {
@@ -487,7 +492,9 @@ function reorganizeOl(ol: HTMLElement, force = false) {
 
     const updateHeight = () => {
       if (!groupEl.classList.contains('mo-collapsed')) {
-        itemsContainer.style.maxHeight = `${itemsContainer.scrollHeight}px`;
+        if (itemsContainer.scrollHeight > 0) {
+          itemsContainer.style.maxHeight = `${itemsContainer.scrollHeight}px`;
+        }
       }
     };
 
@@ -550,13 +557,31 @@ function needsReorganization(ol: HTMLElement): boolean {
 function tryReorganize() {
   if (searching) return;
   if (!configLoaded) return;
-  if (!window.location.pathname.includes('/content-manager/')) return;
+  if (!isContentManagerPage()) return;
 
   for (const ol of findContentTypeOls()) {
     if (needsReorganization(ol)) {
       reorganizeOl(ol, true);
     }
   }
+}
+
+let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+
+function remeasureGroups() {
+  document
+    .querySelectorAll('.mo-group:not(.mo-collapsed) > .mo-items')
+    .forEach((ul) => {
+      const el = ul as HTMLElement;
+      if (el.scrollHeight > 0) {
+        el.style.maxHeight = `${el.scrollHeight}px`;
+      }
+    });
+}
+
+function scheduleRemeasure() {
+  if (resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => requestAnimationFrame(remeasureGroups), 150);
 }
 
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
@@ -598,7 +623,7 @@ function handleSearchInput(event: Event) {
 }
 
 function isContentManagerPage() {
-  return window.location.pathname.includes('/content-manager/');
+  return /\/content-manager(\/|$)/.test(window.location.pathname);
 }
 
 async function refreshConfig(force = false) {
@@ -659,6 +684,9 @@ export function setupMenuOrganizer() {
   });
 
   document.addEventListener('input', handleSearchInput, true);
+
+  window.addEventListener('resize', scheduleRemeasure);
+  window.addEventListener('orientationchange', scheduleRemeasure);
 
   observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [2.0.3] - 2026-08-18
+
+### Fixed
+- **Small Screens:** Fixed the configured menu rendering blank on mobile and small tablets (below 768px) — the sidebar organizer now runs on Strapi's full-page Content Manager navigation at the base route.
+- **Group Heights:** Groups organized while the sidebar was hidden no longer appear collapsed (empty) after rotating or resizing across the 768px breakpoint.
+- **Text Size Consistency:** Group labels and menu item links now use Strapi's desktop menu text size (1.4rem) consistently on desktop, tablet, and mobile.
+
 ## [2.0.2] - 2026-08-11
 
 ### Fixed
